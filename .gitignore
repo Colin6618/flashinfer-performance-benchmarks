@@ -1,0 +1,62 @@
+# Virtual Environments
+venv/
+venv310/
+venv312sys/
+env/
+.venv/
+
+# Cache Directories
+pip-cache/
+torch-cache/
+triton-cache/
+cuda-cache/
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Temporary Files
+tmp/
+logs/
+*.log
+
+# Benchmark Results (optional - include in repo for reference)
+# Uncomment below to ignore all results
+# *_results*.csv
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build artifacts
+__pycache__/
+*.so
+*.o
+*.a
+
+# CUDA/GPU specific
+.nv/
+nvidia_smi.log
+
+*.pptx

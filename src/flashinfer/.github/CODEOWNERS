@@ -1,0 +1,46 @@
+# CODEOWNERS — manually maintained, not auto-generated.
+#
+# Rules:
+#   - Last matching pattern wins (GitHub semantics).
+#   - Catch-all ensures every PR gets at least one core-maintainer review.
+#   - Prefer @flashinfer-ai/<team> over individual users. (currently working around this)
+#   - Keep entries sorted alphabetically within each section.
+
+# ── Catch-all: core maintainers review everything not covered below ──
+* @yzh119 @sricketts @aleozlx @yongwww @cyx-6 @saltyminty @bkryu @yyihuang @kahyunnam @jimmyzho @nv-yunzheq @samuellees
+
+# ── Attention ──
+csrc/fmha_v2/                  @saltyminty @yzh119 @nv-yunzheq @bkryu
+csrc/xqa/                      @saltyminty @yzh119 @nv-yunzheq @bkryu
+flashinfer/attention.py        @saltyminty @yzh119 @nv-yunzheq @bkryu
+include/flashinfer/attention/  @saltyminty @yzh119 @nv-yunzheq @bkryu
+tests/attention/               @saltyminty @yzh119 @nv-yunzheq @bkryu
+
+# ── GEMM ──
+flashinfer/gemm/               @dhiraj113 @yzh119 @aleozlx @bkryu
+include/flashinfer/gemm/       @dhiraj113 @yzh119 @aleozlx @bkryu
+tests/gemm/                    @dhiraj113 @yzh119 @aleozlx @bkryu
+
+# ── MOE ──
+csrc/fused_moe/                @aleozlx @yzh119 @jiahanc @IwakuraRein @nv-yunzheq @samuellees
+flashinfer/fused_moe/          @aleozlx @yzh119 @jiahanc @IwakuraRein @nv-yunzheq @samuellees
+tests/moe/                     @aleozlx @yzh119 @jiahanc @IwakuraRein @nv-yunzheq @samuellees
+
+# ── Communication ──
+flashinfer/comm/               @aleozlx @yzh119 @jimmyzho @bkryu @nv-yunzheq
+include/flashinfer/comm/       @aleozlx @yzh119 @jimmyzho @bkryu @nv-yunzheq
+tests/comm/                    @aleozlx @yzh119 @jimmyzho @bkryu @nv-yunzheq
+
+# ── Norm ──
+flashinfer/norm.py             @kahyunnam @yzh119 @bkryu @yongwww
+tests/norm/                    @kahyunnam @yzh119 @bkryu @yongwww
+
+# ── GDN ──
+benchmarks/gdn/                          @kahyunnam @yzh119 @bkryu @yongwww
+csrc/gdn_prefill_launcher.cu             @kahyunnam @yzh119 @bkryu @yongwww
+csrc/gdn_prefill_sm90_kernel_inst.jinja  @kahyunnam @yzh119 @bkryu @yongwww
+flashinfer/gdn_decode.py                 @kahyunnam @yzh119 @bkryu @yongwww
+flashinfer/gdn_kernels/                  @kahyunnam @yzh119 @bkryu @yongwww
+flashinfer/gdn_prefill.py                @kahyunnam @yzh119 @bkryu @yongwww
+flashinfer/jit/gdn.py                    @kahyunnam @yzh119 @bkryu @yongwww
+tests/gdn/                               @kahyunnam @yzh119 @bkryu @yongwww

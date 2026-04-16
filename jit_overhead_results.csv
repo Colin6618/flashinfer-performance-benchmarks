@@ -1,0 +1,2 @@
+first_call_ms,steady_avg_ms,steady_min_ms,steady_max_ms,first_vs_steady_ratio,kv_len,num_heads,head_dim
+170.28705799020827,0.0767077598720789,0.0726932194083929,0.1583639532327652,2219.9456518373913,2048,32,128
