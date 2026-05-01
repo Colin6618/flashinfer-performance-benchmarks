@@ -49,6 +49,7 @@ Workloads:
 2. JIT overhead: fixed `num_heads=32`, `head_dim=128`, `kv_len=2048`
 3. Head-dim sweep (supplementary): fixed `num_heads=32`, `kv_len=2048`, vary `head_dim` in `{64, 128, 256}`
 
+
 ## Feasibility Check
 After enabling `FLASHINFER_EXPERIMENTAL_VOLTA=1`, minimal decode ran successfully.
 

@@ -1,141 +1,83 @@
-# FlashInfer Performance Benchmarks
+# Lightweight Telemetry for FlashInfer JIT and Decode Profiling
 
-A comprehensive benchmark suite for [FlashInfer](https://github.com/flashinfer-ai/flashinfer), a high-performance GPU kernel library for LLM inference. This project analyzes key performance characteristics of FlashInfer's single-decode attention kernels across varying model dimensions and input shapes.
+This repository contains a lab project that adds lightweight observability to
+FlashInfer and uses it to profile JIT compilation, module loading, batch decode
+planning, and repeated decode execution.
 
-## Overview
+The main benchmark measures:
 
-FlashInfer provides state-of-the-art GPU kernels for attention computation in LLM inference. This benchmark suite evaluates:
+- cold single-decode execution,
+- warm single-decode execution,
+- paged-KV batch decode planning,
+- repeated paged-KV batch decode runs.
 
-- **Head Dimension Impact**: Latency across different attention head dimensions (64, 128, 256 dimensions)
-- **KV Cache Length Scaling**: Performance with varying K-V cache sequence lengths (512-8192 tokens)
-- **JIT Compilation Overhead**: First-call latency vs. steady-state performance
+A report is also included [Lightweight Telemetry for FlashInfer.pdf](Lightweight Telemetry for FlashInfer.pdf).
 
-## Quick Start
+## Changes and Key Files
 
-### Prerequisites
+- `bench_workflow.py` - primary workflow benchmark used in the report.
+- `run_all_benchmarks.sh` - runs the workflow benchmark and writes one telemetry log.
+- `setup_flashinfer_env.sh` - HPC environment setup and telemetry defaults.
+- `analyze_flashinfer_logs.py` - converts JSONL telemetry into CSV summaries.
+- `plot_flashinfer_logs.py` - generates report figures from benchmark outputs.
+- `src/flashinfer/flashinfer/telemetry.py` - lightweight telemetry helpers.
+- `src/flashinfer/flashinfer/jit/core.py` - JIT-path instrumentation.
+- `src/flashinfer/flashinfer/decode.py` - decode wrapper instrumentation.
 
-- NVIDIA GPU with CUDA 12.6+ support
-- Python 3.10+
-- PyTorch with CUDA support
+scripts such as `bench_jit_overhead.py`, `bench_headdim.py`,
+`bench_kvlen.py`, and `bench_decode.py` are retained as supporting
+microbenchmarks.
 
-### Setup
+## Running on the Rice HPC Cluster
+
+Request an interactive GPU node first:
 
 ```bash
-# Load environment and activate virtual environment
+srun --pty --time=02:59:59 --gpus=1 --mem=64G $SHELL
+```
+
+Then run:
+
+```bash
 source setup_flashinfer_env.sh
+bash run_all_benchmarks.sh
+
+latest=$(ls -t logs/obs_*_workflow.jsonl | head -1)
+python analyze_flashinfer_logs.py "$latest"
+python plot_flashinfer_logs.py "$latest"
 ```
 
-This script:
-- Loads HPC modules (GCC 13.3.0, PyTorch 2.6.0-CUDA-12.6.0)
-- Activates the Python 3.12 virtual environment
-- Configures environment variables for GPU caches
-- Verifies PyTorch/CUDA installation
+The setup script enables FlashInfer observability by default:
 
-### Running Benchmarks
+- `FLASHINFER_OBS_ENABLE=1`
+- `FLASHINFER_OBS_SAMPLE_RATE=1.0`
+- `FLASHINFER_OBS_FORMAT=jsonl`
 
-```bash
-# Test minimal functionality
-python test_minimal.py
+Also avoid the home quota issue.
 
-# Run head dimension benchmark
-python bench_headdim.py
+## Outputs
 
-# Run KV cache length benchmark
-python bench_kvlen.py
+Typical generated outputs include:
 
-# Run JIT overhead analysis
-python bench_jit_overhead.py
-```
+- `logs/obs_*_workflow.jsonl` - raw telemetry events.
+- `logs/obs_*_workflow.summary.csv` - flattened event records.
+- `logs/obs_*_workflow.event_summary.csv` - per-event timing summary.
+- `results/workflow_results.csv` - phase-level benchmark measurements.
+- `figures/*.pdf` and `figures/*.png` - report figures.
 
-Each benchmark script generates a CSV file with results.
 
-## Benchmark Details
+## Public files on GitHub
 
-### test_minimal.py
-Simple correctness test verifying FlashInfer's single-decode attention kernel:
-- Query: (32, 128) fp16 tensor
-- Key/Value: (2048, 32, 128) fp16 tensors
-- Validates output shape and dtype
+ Env caches, build artifacts, or HPC specific logs are not public on Github.
 
-### bench_headdim.py
-Measures latency impact of varying attention head dimensions:
-- **Fixed parameters**: 32 heads, 2048 KV length
-- **Variable**: head_dim ∈ {64, 128, 256}
-- **Output**: `headdim_results.csv`
+## Environment Used for the telemetry
 
-### bench_kvlen.py
-Analyzes KV cache length scaling:
-- **Fixed parameters**: 32 heads, 128 head_dim
-- **Variable**: kv_len ∈ {512, 1024, 2048, 4096, 8192}
-- **Output**: `kvlen_results.csv`
-
-### bench_jit_overhead.py
-Quantifies JIT compilation overhead:
-- First call (includes JIT compilation) vs. steady-state performance
-- Uses same dimensions: 32 heads, 128 head_dim, 2048 KV length
-- **Output**: `jit_overhead_results.csv`
-
-## Benchmark Configuration
-
-All benchmarks use:
-- **Data type**: float16 (fp16)
-- **Warmup iterations**: 10
-- **Measurement iterations**: 50
-- **GPU synchronization**: Enabled for accurate timing
-
-## Results
-
-See [BENCHMARK_REPORT.md](BENCHMARK_REPORT.md) for detailed analysis and performance characteristics.
-
-### Environment
-
-Tests were conducted on:
-- GPU Architecture: NVIDIA H100/A100 class
-- CUDA Version: 12.6.0
+- GPU: NVIDIA L40S
+- Compute capability: 8.9 (`sm_89`)
 - PyTorch: 2.6.0
-
-## Project Structure
-
-```
-.
-├── test_minimal.py              # Functionality test
-├── bench_headdim.py            # Head dimension benchmark
-├── bench_kvlen.py              # KV cache length benchmark
-├── bench_jit_overhead.py       # JIT compilation overhead
-├── setup_flashinfer_env.sh     # Environment setup script
-├── headdim_results.csv         # Head dimension results
-├── kvlen_results.csv           # KV length results
-├── jit_overhead_results.csv    # JIT overhead results
-├── BENCHMARK_REPORT.md         # Detailed analysis
-├── README.md                   # This file
-└── src/flashinfer/            # FlashInfer library source
-
-Cache Directories (auto-created, in .gitignore):
-├── pip-cache/        # pip package cache
-├── torch-cache/      # PyTorch model cache
-├── triton-cache/     # Triton JIT cache
-├── cuda-cache/       # CUDA compilation cache
-└── tmp/              # Temporary files
-```
-
-## Performance Analysis
-
-FlashInfer's `single_decode_with_kv_cache` kernel shows:
-
-1. **Minimal JIT overhead**: ~2200x first-call latency vs steady-state (indicates one-time compilation cost)
-2. **Efficient scaling**: Sub-linear latency increase with KV cache length
-3. **Head dimension impact**: Linear relationship between head_dim and latency
-4. **Steady-state consistency**: ~5-10% variance in repeated calls
-
-For complete analysis, see [BENCHMARK_REPORT.md](BENCHMARK_REPORT.md).
-
-## References
-
-- [FlashInfer GitHub Repository](https://github.com/flashinfer-ai/flashinfer)
-- [FlashInfer Documentation](https://docs.flashinfer.ai)
-- [FlashAttention Papers](https://github.com/Dao-AILab/flash-attention)
+- CUDA: 12.6
+- FlashInfer: 0.6.7 with telemetry injection
 
 ## Author
 
-Colin6618 - Performance Analysis
-
+Yuzhi Han, Rice University

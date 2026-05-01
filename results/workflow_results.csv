@@ -1,0 +1,5 @@
+phase,metric,value_ms,iters,batch_size,kv_len,page_size,num_heads,head_dim
+single_decode_cold,first_call_ms,3905.0663812085986,1,,2048,,32,128
+single_decode_steady,avg_call_ms,0.02302739769220352,50,,2048,,32,128
+batch_decode_plan,plan_call_ms,1735.0920280441642,1,8,2048,16,32,128
+batch_decode_run,avg_call_ms,1.200337940827012,20,8,2048,16,32,128

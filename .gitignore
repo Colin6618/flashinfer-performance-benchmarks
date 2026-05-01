@@ -60,3 +60,5 @@ __pycache__/
 nvidia_smi.log
 
 *.pptx
+BENCHMARK_REPORT.md
+figures/*.pdf

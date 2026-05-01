@@ -9,7 +9,7 @@ HEAD_DIM = 128
 KV_LENS = [512, 1024, 2048, 4096, 8192]
 WARMUP = 10
 ITERS = 50
-OUT_CSV = "kvlen_results.csv"
+OUT_CSV = "results/kvlen_results.csv"
 
 
 def bench_once(kv_len: int) -> float:

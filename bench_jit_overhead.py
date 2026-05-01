@@ -8,7 +8,7 @@ NUM_HEADS = 32
 HEAD_DIM = 128
 KV_LEN = 2048
 STEADY_ITERS = 50
-OUT_CSV = "jit_overhead_results.csv"
+OUT_CSV = "results/jit_overhead_results.csv"
 
 
 def make_inputs():

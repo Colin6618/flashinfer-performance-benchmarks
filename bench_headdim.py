@@ -9,7 +9,7 @@ KV_LEN = 2048
 HEAD_DIMS = [64, 128, 256]
 WARMUP = 10
 ITERS = 50
-OUT_CSV = "headdim_results.csv"
+OUT_CSV = "results/headdim_results.csv"
 
 
 def bench_once(head_dim: int) -> float:
