@@ -11,7 +11,7 @@ The main benchmark measures:
 - paged-KV batch decode planning,
 - repeated paged-KV batch decode runs.
 
-A report is also included [./Lightweight Telemetry for FlashInfer.pdf](Lightweight Telemetry for FlashInfer.pdf).
+A report is also included in this repo [Lightweight Telemetry for FlashInfer.pdf](<Lightweight Telemetry for FlashInfer.pdf>).
 
 ## Changes and Key Files
 
